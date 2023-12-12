@@ -8,6 +8,7 @@ from argparse import ArgumentParser
 from itertools import chain
 from pprint import pformat
 import warnings
+from log_config import get_logger
 
 import torch
 import torch.nn.functional as F
@@ -15,6 +16,10 @@ import torch.nn.functional as F
 from transformers import OpenAIGPTLMHeadModel, OpenAIGPTTokenizer, GPT2LMHeadModel, GPT2Tokenizer
 from train import SPECIAL_TOKENS, build_input_from_segments, add_special_tokens_
 from utils import get_dataset, download_pretrained_model
+
+
+logger = get_logger()
+
 
 def top_filtering(logits, top_k=0., top_p=0.9, threshold=-float('Inf'), filter_value=-float('Inf')):
     """ Filter a distribution of logits using top-k, top-p (nucleus) and/or threshold filtering
@@ -87,6 +92,7 @@ def sample_sequence(personality, history, tokenizer, model, args, current_output
 
     return current_output
 
+
 def run():
     parser = ArgumentParser()
     parser.add_argument("--dataset_path", type=str, default="", help="Path or url of the dataset. If empty download from S3.")
@@ -105,22 +111,16 @@ def run():
     parser.add_argument("--top_p", type=float, default=0.9, help="Nucleus filtering (top-p) before sampling (<=0.0: no filtering)")
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger(__file__)
-    logger.info(pformat(args))
-
     if args.model_checkpoint == "":
         if args.model == 'gpt2':
             raise ValueError("Interacting with GPT2 requires passing a finetuned model_checkpoint")
         else:
             args.model_checkpoint = download_pretrained_model()
-	
-	
-    if args.seed != 0:
-    	random.seed(args.seed)
-    	torch.random.manual_seed(args.seed)
-    	torch.cuda.manual_seed(args.seed)
 
+    if args.seed != 0:
+        random.seed(args.seed)
+        torch.random.manual_seed(args.seed)
+        torch.cuda.manual_seed(args.seed)
 
     logger.info("Get pretrained model and tokenizer")
     tokenizer_class, model_class = (GPT2Tokenizer, GPT2LMHeadModel) if args.model == 'gpt2' else (OpenAIGPTTokenizer, OpenAIGPTLMHeadModel)
@@ -134,20 +134,21 @@ def run():
     personalities = [dialog["personality"] for dataset in dataset.values() for dialog in dataset]
     personality = random.choice(personalities)
     logger.info("Selected personality: %s", tokenizer.decode(chain(*personality)))
-
-    history = []
-    while True:
-        raw_text = input(">>> ")
-        while not raw_text:
-            print('Prompt should not be empty!')
-            raw_text = input(">>> ")
-        history.append(tokenizer.encode(raw_text))
-        with torch.no_grad():
-            out_ids = sample_sequence(personality, history, tokenizer, model, args)
-        history.append(out_ids)
-        history = history[-(2*args.max_history+1):]
-        out_text = tokenizer.decode(out_ids, skip_special_tokens=True)
-        print(out_text)
+    logger.info("Waiting for input...")
+    return tokenizer, personality, model, args
+    # history = []
+    # while True:
+    #     raw_text = input(">>> ")
+    #     while not raw_text:
+    #         print('Prompt should not be empty!')
+    #         raw_text = input(">>> ")
+    #     history.append(tokenizer.encode(raw_text))
+    #     with torch.no_grad():
+    #         out_ids = sample_sequence(personality, history, tokenizer, model, args)
+    #     history.append(out_ids)
+    #     history = history[-(2*args.max_history+1):]
+    #     out_text = tokenizer.decode(out_ids, skip_special_tokens=True)
+    #     print(out_text)
 
 
 if __name__ == "__main__":

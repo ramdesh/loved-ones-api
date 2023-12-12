@@ -24,6 +24,7 @@ RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && \
 # transfer-learning-conv-ai
 ENV PYTHONPATH /usr/local/lib/python3.6 
 COPY . ./
+RUN pip3 install Cython numpy
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
 
@@ -33,5 +34,10 @@ RUN mkdir models && \
     cd models/ && \
     tar -xvzf finetuned_chatbot_gpt.tar.gz && \
     rm finetuned_chatbot_gpt.tar.gz
+
+RUN pip3 install gunicorn
+ENV FLASK_APP ./server.py
     
-CMD ["bash"]
+CMD gunicorn --bind 0.0.0.0:5000 --timeout=600 wsgi:loved_ones
+
+EXPOSE 5000

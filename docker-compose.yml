@@ -1,0 +1,25 @@
+version: "3.5"
+
+services:
+  loved-ones-api:
+    build:
+      context: ./
+    restart: unless-stopped
+    container_name: loved-ones-api
+    image: loved-ones-api
+    environment:
+      MODEL: X
+    ports:
+      - "5000:5000"
+    networks:
+      loved-ones-network:
+        ipv4_address: 172.16.238.10
+
+networks:
+  loved-ones-network:
+    name: loved-ones-network
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
