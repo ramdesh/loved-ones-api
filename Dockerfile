@@ -1,32 +1,11 @@
-FROM ubuntu:18.04
+from python:3.7
 
-MAINTAINER Loreto Parisi loretoparisi@gmail.com
-
-########################################  BASE SYSTEM
-# set noninteractive installation
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y apt-utils
-RUN apt-get install -y --no-install-recommends \
-    build-essential \
-    pkg-config \
-    tzdata \
-    curl
-
-######################################## PYTHON3
-RUN apt-get install -y \
-    python3 \
-    python3-pip
-
-# set local timezone
-RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && \
-    dpkg-reconfigure --frontend noninteractive tzdata
-
-# transfer-learning-conv-ai
-ENV PYTHONPATH /usr/local/lib/python3.6 
-COPY . ./
-RUN pip3 install Cython numpy
-COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt
+copy . /app
+WORKDIR /app
+RUN pip install numpy
+RUN pip install -r requirements.txt
+RUN pip install gunicorn
+ENV FLASK_APP /app/server.py
 
 # model zoo
 RUN mkdir models && \
@@ -35,9 +14,6 @@ RUN mkdir models && \
     tar -xvzf finetuned_chatbot_gpt.tar.gz && \
     rm finetuned_chatbot_gpt.tar.gz
 
-RUN pip3 install gunicorn
-ENV FLASK_APP ./server.py
-    
-CMD gunicorn --bind 0.0.0.0:5000 --timeout=600 wsgi:loved_ones
+CMD gunicorn --bind 0.0.0.0:5000 --timeout=600 wsgi:basilar
 
 EXPOSE 5000
