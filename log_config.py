@@ -20,7 +20,12 @@ def get_logger():
                 "stream": "ext://sys.stdout",
             }
         },
-        "loggers": {"loved_ones": {"level": os.getenv("LOG_LEVEL", "INFO"), "handlers": ["console"],}},
+        "loggers": {
+            "loved_ones": {
+                "level": os.getenv("LOG_LEVEL", "INFO"),
+                "handlers": ["console"],
+            }
+        },
     }
     logging.config.dictConfig(log_config)
     return logging.getLogger("loved_ones")

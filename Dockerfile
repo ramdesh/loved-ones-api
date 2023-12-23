@@ -14,6 +14,6 @@ RUN mkdir models && \
     tar -xvzf finetuned_chatbot_gpt.tar.gz && \
     rm finetuned_chatbot_gpt.tar.gz
 
-CMD gunicorn --bind 0.0.0.0:5000 --timeout=600 wsgi:basilar
+CMD gunicorn --bind 0.0.0.0:5000 --timeout=600 wsgi:loved_ones
 
 EXPOSE 5000
