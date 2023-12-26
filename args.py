@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class args:
-    dataset_path: str = ""
+    dataset_path: str = "./dataset_cache/personachat_self_original.json"
     dataset_cache: str = "./dataset_cache"
     model: str = "openai-gpt"
     model_checkpoint: str = ""
@@ -16,3 +16,4 @@ class args:
     temperature: float = 0.7
     top_k: int = 0
     top_p: float = 0.9
+    eval_type: str = "hits@1"

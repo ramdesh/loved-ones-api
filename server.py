@@ -33,3 +33,8 @@ def send_message():
     # history = history[-(2 * args.max_history + 1):]
     out_text = tokenizer.decode(out_ids, skip_special_tokens=True)
     return jsonify({"message": raw_text, "response": out_text})
+
+
+@loved_ones.route(API_BASE + "/info")
+def get_info():
+    return jsonify({"modelName": args.model})

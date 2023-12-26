@@ -34,6 +34,7 @@ from train import (
 )
 from utils import download_pretrained_model, AttrDict
 from interact import sample_sequence
+from args import args
 
 
 class TransformerAgent(Agent):
@@ -78,9 +79,9 @@ class TransformerAgent(Agent):
     def __init__(self, opt, shared=None):
         super(TransformerAgent, self).__init__(opt, shared)
 
-        args = AttrDict(
-            opt
-        )  # to keep most commands identical to the interact.py script
+        # args = AttrDict(
+        #     opt
+        # )  # to keep most commands identical to the interact.py script
         self.args = args
 
         logging.basicConfig(level=logging.INFO)
