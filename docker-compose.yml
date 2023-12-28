@@ -15,6 +15,18 @@ services:
       loved-ones-network:
         ipv4_address: 172.16.238.10
 
+  loved-ones-ui:
+    build:
+      context: ../loved-ones-ui
+    restart: unless-stopped
+    container_name: loved-ones-ui
+    image: loved-ones-ui
+    ports:
+      - "8080:8080"
+    networks:
+      loved-ones-network:
+        ipv4_address: 172.16.238.11
+
 networks:
   loved-ones-network:
     name: loved-ones-network
