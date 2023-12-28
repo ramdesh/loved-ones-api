@@ -15,7 +15,7 @@ loved_ones = Flask(__name__)
 cors = CORS(loved_ones)
 history = []
 
-tokenizer, personality, model, args = run()
+tokenizer, personality, personality_text, model, args = run()
 
 
 @loved_ones.route(API_BASE + "/")
@@ -37,4 +37,7 @@ def send_message():
 
 @loved_ones.route(API_BASE + "/info")
 def get_info():
-    return jsonify({"modelName": args.model})
+    return jsonify({
+        "modelName": args.model,
+        "personality": personality_text
+    })

@@ -157,9 +157,10 @@ def run():
         dialog["personality"] for dataset in dataset.values() for dialog in dataset
     ]
     personality = random.choice(personalities)
-    logger.info("Selected personality: %s", tokenizer.decode(chain(*personality)))
+    personality_text = tokenizer.decode(chain(*personality))
+    logger.info("Selected personality: %s", personality_text)
     logger.info("Waiting for input...")
-    return tokenizer, personality, model, args
+    return tokenizer, personality, personality_text, model, args
     # history = []
     # while True:
     #     raw_text = input(">>> ")
