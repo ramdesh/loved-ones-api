@@ -21,6 +21,6 @@ curl https://s3.amazonaws.com/datasets.huggingface.co/personachat/personachat_se
 curl https://s3.amazonaws.com/models.huggingface.co/transfer-learning-chatbot/gpt_personachat_cache.tar.gz > dataset_cache/gpt_personachat_cache.tar.gz
 
 
-CMD gunicorn --bind 0.0.0.0:5000 --timeout=1200 wsgi:loved_ones
+CMD gunicorn --bind 0.0.0.0:5001 --timeout=1200 wsgi:loved_ones
 
-EXPOSE 5000
+EXPOSE 5001

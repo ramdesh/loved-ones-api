@@ -10,7 +10,7 @@ services:
     environment:
       MODEL: X
     ports:
-      - "5000:5000"
+      - "5001:5001"
     networks:
       loved-ones-network:
         ipv4_address: 172.16.238.10
