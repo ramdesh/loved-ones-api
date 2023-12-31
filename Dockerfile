@@ -2,6 +2,7 @@ from python:3.7
 
 copy . /app
 WORKDIR /app
+CMD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 RUN pip install numpy
 RUN pip install -r requirements.txt
 RUN pip install gunicorn
