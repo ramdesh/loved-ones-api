@@ -1,8 +1,8 @@
-from python:3.8
+from python:3.7
 
 copy . /app
 WORKDIR /app
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+# RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 RUN pip install numpy
 RUN pip install -r requirements.txt
 RUN pip install gunicorn
