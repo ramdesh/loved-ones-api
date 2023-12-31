@@ -1,4 +1,4 @@
-from python:3.6
+from python:3.8
 
 copy . /app
 WORKDIR /app
